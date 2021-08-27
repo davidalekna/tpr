@@ -63,17 +63,15 @@ const ActuaryButton: React.FC = () => {
 				}
 			}}
 			isEditButton={true}
+			isMainHeading={true}
 		>
 			{i18n.preview.buttons.one}
 		</UnderlinedButton>
 	);
 };
 
-const RemoveButton: React.FC<{ title: string; tabIndex?: number }> = ({
-	title,
-	tabIndex,
-}) => {
-	const { current, send } = useActuaryContext();
+const RemoveButton: React.FC = () => {
+	const { current, send, i18n } = useActuaryContext();
 	return (
 		<UnderlinedButton
 			isOpen={
@@ -91,9 +89,11 @@ const RemoveButton: React.FC<{ title: string; tabIndex?: number }> = ({
 					send('REMOVE');
 				}
 			}}
-			tabIndex={tabIndex}
+			tabIndex={removeFromTabFlowIfMatches(current, {
+				edit: 'name',
+			})}
 		>
-			{title}
+			{i18n.preview.buttons.two}
 		</UnderlinedButton>
 	);
 };
@@ -120,6 +120,8 @@ export const ActuaryCard: React.FC<ActuaryProviderProps> = React.memo(
 							])}
 						>
 							<Toolbar
+								buttonLeft={ActuaryButton}
+								buttonRight={RemoveButton}
 								complete={isComplete(current.context)}
 								subtitle={() => (
 									<Subtitle
@@ -136,15 +138,6 @@ export const ActuaryCard: React.FC<ActuaryProviderProps> = React.memo(
 										? i18n.preview.statusText.confirmed
 										: i18n.preview.statusText.unconfirmed
 								}
-								buttonLeft={() => <ActuaryButton />}
-								buttonRight={() => (
-									<RemoveButton
-										title={i18n.preview.buttons.two}
-										tabIndex={removeFromTabFlowIfMatches(current, {
-											edit: 'name',
-										})}
-									/>
-								)}
 							/>
 							<CardContentSwitch />
 						</Section>
